@@ -35,7 +35,8 @@ require('goplay').setup()
   template = require("goplay.templates").default, -- template which will be used as the default content for the playground
   mode = "vsplit", -- current/split/[vsplit] specifies where the playground will be opened
   playgroundDirName = "goplayground", -- a name of the directory under GOPATH/src where the playground will be saved
-  tempPlaygroundDirName = "goplayground_temp" -- a name of the directory under GOPATH/src where the temporary playground will be saved. This option is used when you need to execute a file
+  tempPlaygroundDirName = "goplayground_temp", -- a name of the directory under GOPATH/src where the temporary playground will be saved. This option is used when you need to execute a file
+  output_mode = "formatted", -- [formatted]/raw mode to display output
 }
 ```
 

@@ -4,7 +4,12 @@ function Utils._os_capture(cmd, raw)
   local f = assert(io.popen(cmd, 'r'))
   local s = assert(f:read('*a'))
   f:close()
+
   if raw then return s end
+  return Utils._format_result(s)
+end
+
+function Utils._format_result(s)
   s = string.gsub(s, '^%s+', '')
   s = string.gsub(s, '%s+$', '')
   s = string.gsub(s, '[\n\r]+', ' ')
@@ -20,7 +25,7 @@ function Utils._isFileExist(path)
 end
 
 function Utils._execGoFile(filepath)
-  print(Utils._os_capture("go run " .. filepath, false))
+  return Utils._os_capture("go run " .. filepath, true)
 end
 
 return Utils

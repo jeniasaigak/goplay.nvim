@@ -7,12 +7,18 @@ local modes = {
   vsplit = "vsplit",
 }
 
+local output_modes = {
+  formatted = "formatted",
+  raw = "raw",
+}
+
 local M = {
   -- Data which can be configured
   template = templates.default, -- template which will be used as the default content for the playground
   mode = modes.vsplit, -- current/split/[vsplit] specifies where the playground will be opened
   playgroundDirName = "goplayground", -- a name of the directory under GOPATH/src where the playground will be saved
   tempPlaygroundDirName = "goplayground_temp", -- a name of the directory under GOPATH/src where the temporary playground will be saved. This option is used when you need to execute a file
+  output_mode = output_modes.formatted,
 
   -- Data which might be used for configuring
   templates = templates,
@@ -26,6 +32,7 @@ function M.setup(opts)
 
   M.template = opts.template or M.template
   M.mode = opts.mode or M.mode
+  M.output_mode = opts.output_mode or M.output_mode
   M.playgroundDirName = opts.playgroundDirName or M.playgroundDirName
   M.tempPlaygroundDirName = opts.tempPlaygroundDirName or M.tempPlaygroundDirName
   M.goPath = opts.goPath or utils._os_capture("go env GOPATH", false)
@@ -51,15 +58,23 @@ function M.goExecFileAsPlayground()
   if not utils._isDirExist(M._tempGoPlaygroundPath) then M._createPlaygroundFolder(M._tempGoPlaygroundPath) end
   M._fillPlaygroundFile(M._tempFilePath, content)
 
-  utils._execGoFile(M._tempFilePath)
+  M.printExecResult(utils._execGoFile(M._tempFilePath))
   os.execute("rm -rf " .. M._tempGoPlaygroundPath)
 end
 
 function M.goExecPlayground()
   if utils._isFileExist(M._filePath) then
-    utils._execGoFile(M._filePath)
+    M.printExecResult(utils._execGoFile(M._filePath))
   else
     print("Playground is not created yet. Please use :GPOpen or :GPToggle to create a playground")
+  end
+end
+
+function M.printExecResult(result)
+  if M.output_mode == output_modes.raw then
+    vim.api.nvim_echo({ { result } }, true, {})
+  else
+    print(utils._format_result(result))
   end
 end
 
