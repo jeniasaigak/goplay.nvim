@@ -95,7 +95,7 @@ function M.goPlaygroundOpen()
 end
 
 function M.goPlaygroundClose()
-  vim.cmd["bdelete!"](M._activeBuf)
+  vim.cmd.bdelete { M._activeBuf, bang = true }
   M._activeBuf = nil
 end
 
